@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ShieldCheck,
@@ -19,6 +19,8 @@ const HAPTIC_PRESS =
   "active:scale-[0.97] transition-transform duration-200 ease-out";
 
 export default function AboutPage({ isDark }) {
+  const [logoError, setLogoError] = useState(false); // For custom logo fallback
+
   return (
     <div className="w-full flex flex-col items-center animate-in fade-in slide-in-from-bottom-8 duration-700 relative overflow-hidden">
       {/* Global Animated Background Mesh */}
@@ -38,16 +40,31 @@ export default function AboutPage({ isDark }) {
           {/* Logo Container */}
           <div className="relative p-5 bg-white dark:bg-zinc-900 border border-indigo-100 dark:border-zinc-800 rounded-3xl shadow-xl shadow-indigo-900/10 dark:shadow-black/50 transform rotate-6 hover:rotate-0 transition-transform duration-500">
             {/* 🚀 Using logo1 and logo2 here */}
-            <img
-              src={isDark ? "/logo2.png" : "/logo2.png"}
-              alt="SecureGen Logo"
-              className="w-16 h-16 object-contain animate-[pulse_3s_ease-in-out_infinite]"
-              onError={(e) => {
-                e.target.style.display = "none";
-                e.target.nextSibling.style.display = "block";
-              }}
-            />
-
+            {!logoError ? (
+              <>
+                {/* Dark Mode Logo */}
+                <img
+                  src="/logo1.png"
+                  alt="SecureGen Logo"
+                  onError={() => setLogoError(true)}
+                  className="hidden dark:block w-15 h-15 object-contain drop-shadow-md"
+                />
+                {/* Light Mode Logo */}
+                <img
+                  src="/logo2.png"
+                  alt="SecureGen Logo"
+                  onError={() => setLogoError(true)}
+                  className="block dark:hidden w-15 h-15 object-contain drop-shadow-md"
+                />
+              </>
+            ) : (
+              /* Fallback Icon */
+              <Hexagon
+                size={40}
+                strokeWidth={2}
+                className="text-indigo-600 dark:text-teal-400 fill-indigo-50 dark:fill-teal-500/10"
+              />
+            )}
             {/* Fallback Hexagon (Hidden unless image fails) */}
             <div style={{ display: "none" }}>
               <Hexagon

@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { Mail, Lock, User, Phone, Zap, ShieldCheck } from "lucide-react";
+import { Mail, Lock, Phone, Zap, Hexagon, ShieldCheck } from "lucide-react";
 
 const HAPTIC_PRESS =
   "active:scale-[0.97] transition-transform duration-200 ease-out";
 
-export default function Register() {
+export default function Register({ isDark }) {
+  // 👈 Make sure App.jsx passes isDark to Register!
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -17,6 +18,7 @@ export default function Register() {
   const { register } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [logoError, setLogoError] = useState(false); // For custom logo fallback
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,22 +41,45 @@ export default function Register() {
     <div className="w-full max-w-md mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700 relative z-10 pt-4 pb-10">
       {/* Abstract Animated Background Mesh */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-lg max-h-lg pointer-events-none dark:hidden">
-        <div className="absolute top-0 left-10 w-72 h-72 bg-purple-400/30 rounded-full mix-blend-multiply filter blur-[80px] animate-[blob_7s_infinite]"></div>
-        <div className="absolute top-20 right-0 w-72 h-72 bg-pink-400/30 rounded-full mix-blend-multiply filter blur-[80px] animate-[blob_7s_infinite_2s]"></div>
-        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-orange-400/30 rounded-full mix-blend-multiply filter blur-[80px] animate-[blob_7s_infinite_4s]"></div>
+        <div className="absolute top-0 left-10 w-72 h-72 bg-purple-400/20 rounded-full mix-blend-multiply filter blur-[80px] animate-[blob_7s_infinite]"></div>
+        <div className="absolute top-20 right-0 w-72 h-72 bg-pink-400/20 rounded-full mix-blend-multiply filter blur-[80px] animate-[blob_7s_infinite_2s]"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-orange-400/20 rounded-full mix-blend-multiply filter blur-[80px] animate-[blob_7s_infinite_4s]"></div>
       </div>
 
       <div className="text-center mb-10 relative z-10">
-        <div className="relative inline-flex justify-center mb-6">
-          <div className="absolute inset-0 bg-purple-500/20 dark:bg-emerald-500/20 blur-xl rounded-full animate-pulse"></div>
-          <div className="relative p-4 bg-white dark:bg-zinc-900 border border-purple-100 dark:border-zinc-800 rounded-3xl shadow-xl shadow-purple-900/10 dark:shadow-black/50 transform rotate-6 hover:rotate-0 transition-transform duration-500">
-            <ShieldCheck
-              size={40}
-              strokeWidth={2}
-              className="text-purple-600 dark:text-emerald-400"
-            />
+        <div className="relative inline-flex justify-center mb-6 group">
+          <div className="absolute inset-0 bg-purple-500/20 dark:bg-emerald-500/20 blur-2xl rounded-full animate-pulse group-hover:bg-purple-500/40 transition-colors duration-500"></div>
+
+          <div className="relative p-4 bg-white/80 backdrop-blur-xl dark:bg-zinc-900 border border-purple-100 dark:border-zinc-800 rounded-3xl shadow-xl shadow-purple-900/10 dark:shadow-black/50 transform rotate-6 group-hover:rotate-0 transition-transform duration-500">
+            {/* 🚀 Integrated Custom Logos Here */}
+            {!logoError ? (
+              <>
+                {/* Dark Mode Logo */}
+                <img
+                  src="/logo1.png"
+                  alt="SecureGen Logo"
+                  onError={() => setLogoError(true)}
+                  className="hidden dark:block w-10 h-10 object-contain drop-shadow-md"
+                />
+                {/* Light Mode Logo */}
+                <img
+                  src="/logo2.png"
+                  alt="SecureGen Logo"
+                  onError={() => setLogoError(true)}
+                  className="block dark:hidden w-10 h-10 object-contain drop-shadow-md"
+                />
+              </>
+            ) : (
+              /* Fallback Icon */
+              <Hexagon
+                size={40}
+                strokeWidth={2}
+                className="text-indigo-600 dark:text-teal-400 fill-indigo-50 dark:fill-teal-500/10"
+              />
+            )}
           </div>
         </div>
+
         <h2 className="text-4xl md:text-5xl font-black mb-3 text-stone-900 dark:text-white tracking-tight leading-tight">
           Join <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 dark:from-emerald-400 dark:to-cyan-400 drop-shadow-sm">
@@ -67,32 +92,13 @@ export default function Register() {
       </div>
 
       {/* Main Glass Card */}
-      <div className="relative overflow-hidden rounded-[2.5rem] border transition-all duration-500 shadow-2xl shadow-purple-900/10 bg-white/70 backdrop-blur-2xl border-white dark:bg-zinc-900/70 dark:border-zinc-800/80 dark:shadow-black/80">
+      <div className="relative overflow-hidden rounded-[2.5rem] border transition-all duration-500 shadow-2xl shadow-purple-900/10 bg-white/70 backdrop-blur-3xl border-white dark:bg-zinc-900/70 dark:border-zinc-800/80 dark:shadow-black/80">
         <div className="h-2 w-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 dark:from-emerald-400 dark:via-cyan-500 dark:to-blue-600" />
 
-        <div className="p-8 md:p-10 space-y-7">
-          <a
-            href="https://securegen-encrypted-vault-1.onrender.com/api/auth/google"
-            className={`w-full flex justify-center items-center gap-3 py-4 px-4 bg-white dark:bg-zinc-950 border-2 border-purple-50 dark:border-zinc-800/80 text-stone-700 dark:text-zinc-200 rounded-2xl font-black hover:border-purple-100 hover:shadow-lg hover:shadow-purple-500/5 dark:hover:border-zinc-700 transition-all duration-300 ${HAPTIC_PRESS}`}
-          >
-            <img
-              src="https://www.svgrepo.com/show/475656/google-color.svg"
-              alt="Google"
-              className="w-5 h-5"
-            />
-            Sign up with Google
-          </a>
-
-          <div className="flex items-center w-full">
-            <div className="flex-1 border-t-2 border-purple-50 dark:border-zinc-800"></div>
-            <span className="px-4 text-[10px] font-black uppercase tracking-widest text-purple-300 dark:text-zinc-600">
-              Or email
-            </span>
-            <div className="flex-1 border-t-2 border-purple-50 dark:border-zinc-800"></div>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="grid grid-cols-2 gap-4">
+        <div className="p-8 md:p-10">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-2 gap-5">
+              {/* First Name Input */}
               <div className="relative group">
                 <input
                   id="firstName"
@@ -101,7 +107,7 @@ export default function Register() {
                   placeholder=" "
                   required
                   onChange={handleChange}
-                  className="peer w-full px-5 pt-6 pb-2 rounded-2xl bg-purple-50/50 dark:bg-zinc-950/50 border-2 border-transparent focus:border-purple-500 dark:focus:border-emerald-500 outline-none transition-all font-bold text-sm text-stone-900 dark:text-white focus:bg-white dark:focus:bg-zinc-900 shadow-inner"
+                  className="peer w-full px-5 pt-6 pb-2 rounded-2xl bg-white/50 dark:bg-zinc-950/50 border-2 border-purple-50/50 dark:border-zinc-800/50 focus:border-purple-500 dark:focus:border-emerald-500 outline-none transition-all font-bold text-sm text-stone-900 dark:text-white focus:bg-white dark:focus:bg-zinc-900 shadow-inner"
                 />
                 <label
                   htmlFor="firstName"
@@ -110,6 +116,8 @@ export default function Register() {
                   First Name
                 </label>
               </div>
+
+              {/* Last Name Input */}
               <div className="relative group">
                 <input
                   id="lastName"
@@ -118,7 +126,7 @@ export default function Register() {
                   placeholder=" "
                   required
                   onChange={handleChange}
-                  className="peer w-full px-5 pt-6 pb-2 rounded-2xl bg-purple-50/50 dark:bg-zinc-950/50 border-2 border-transparent focus:border-purple-500 dark:focus:border-emerald-500 outline-none transition-all font-bold text-sm text-stone-900 dark:text-white focus:bg-white dark:focus:bg-zinc-900 shadow-inner"
+                  className="peer w-full px-5 pt-6 pb-2 rounded-2xl bg-white/50 dark:bg-zinc-950/50 border-2 border-purple-50/50 dark:border-zinc-800/50 focus:border-purple-500 dark:focus:border-emerald-500 outline-none transition-all font-bold text-sm text-stone-900 dark:text-white focus:bg-white dark:focus:bg-zinc-900 shadow-inner"
                 />
                 <label
                   htmlFor="lastName"
@@ -129,6 +137,7 @@ export default function Register() {
               </div>
             </div>
 
+            {/* Email Input */}
             <div className="relative group">
               <Mail
                 className="absolute left-5 top-4 text-purple-300 dark:text-zinc-600 group-focus-within:text-purple-600 dark:group-focus-within:text-emerald-400 transition-colors z-10"
@@ -141,7 +150,7 @@ export default function Register() {
                 placeholder=" "
                 required
                 onChange={handleChange}
-                className="peer w-full pl-12 pr-5 pt-6 pb-2 rounded-2xl bg-purple-50/50 dark:bg-zinc-950/50 border-2 border-transparent focus:border-purple-500 dark:focus:border-emerald-500 outline-none transition-all font-bold text-sm text-stone-900 dark:text-white focus:bg-white dark:focus:bg-zinc-900 shadow-inner"
+                className="peer w-full pl-12 pr-5 pt-6 pb-2 rounded-2xl bg-white/50 dark:bg-zinc-950/50 border-2 border-purple-50/50 dark:border-zinc-800/50 focus:border-purple-500 dark:focus:border-emerald-500 outline-none transition-all font-bold text-sm text-stone-900 dark:text-white focus:bg-white dark:focus:bg-zinc-900 shadow-inner"
               />
               <label
                 htmlFor="email"
@@ -151,6 +160,7 @@ export default function Register() {
               </label>
             </div>
 
+            {/* Phone Input */}
             <div className="relative group">
               <Phone
                 className="absolute left-5 top-4 text-purple-300 dark:text-zinc-600 group-focus-within:text-purple-600 dark:group-focus-within:text-emerald-400 transition-colors z-10"
@@ -162,7 +172,7 @@ export default function Register() {
                 type="text"
                 placeholder=" "
                 onChange={handleChange}
-                className="peer w-full pl-12 pr-5 pt-6 pb-2 rounded-2xl bg-purple-50/50 dark:bg-zinc-950/50 border-2 border-transparent focus:border-purple-500 dark:focus:border-emerald-500 outline-none transition-all font-bold text-sm text-stone-900 dark:text-white focus:bg-white dark:focus:bg-zinc-900 shadow-inner"
+                className="peer w-full pl-12 pr-5 pt-6 pb-2 rounded-2xl bg-white/50 dark:bg-zinc-950/50 border-2 border-purple-50/50 dark:border-zinc-800/50 focus:border-purple-500 dark:focus:border-emerald-500 outline-none transition-all font-bold text-sm text-stone-900 dark:text-white focus:bg-white dark:focus:bg-zinc-900 shadow-inner"
               />
               <label
                 htmlFor="phone"
@@ -172,6 +182,7 @@ export default function Register() {
               </label>
             </div>
 
+            {/* Password Input */}
             <div className="relative group">
               <Lock
                 className="absolute left-5 top-4 text-purple-300 dark:text-zinc-600 group-focus-within:text-purple-600 dark:group-focus-within:text-emerald-400 transition-colors z-10"
@@ -184,7 +195,7 @@ export default function Register() {
                 placeholder=" "
                 required
                 onChange={handleChange}
-                className="peer w-full pl-12 pr-5 pt-6 pb-2 rounded-2xl bg-purple-50/50 dark:bg-zinc-950/50 border-2 border-transparent focus:border-purple-500 dark:focus:border-emerald-500 outline-none transition-all font-black tracking-widest text-sm text-stone-900 dark:text-white focus:bg-white dark:focus:bg-zinc-900 shadow-inner"
+                className="peer w-full pl-12 pr-5 pt-6 pb-2 rounded-2xl bg-white/50 dark:bg-zinc-950/50 border-2 border-purple-50/50 dark:border-zinc-800/50 focus:border-purple-500 dark:focus:border-emerald-500 outline-none transition-all font-black tracking-widest text-sm text-stone-900 dark:text-white focus:bg-white dark:focus:bg-zinc-900 shadow-inner"
               />
               <label
                 htmlFor="password"
@@ -197,10 +208,10 @@ export default function Register() {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-4 rounded-2xl font-black text-[15px] flex items-center justify-center gap-2 text-white shadow-xl shadow-pink-500/20 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 dark:from-emerald-500 dark:to-cyan-600 dark:hover:from-emerald-400 dark:hover:to-cyan-500 dark:text-zinc-950 mt-6 transition-all duration-300 ${HAPTIC_PRESS} disabled:opacity-70 disabled:cursor-not-allowed`}
+              className={`w-full py-4 rounded-2xl font-black text-[15px] flex items-center justify-center gap-2 text-white shadow-xl shadow-pink-500/20 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 dark:from-emerald-500 dark:to-cyan-600 dark:hover:from-emerald-400 dark:hover:to-cyan-500 dark:text-zinc-950 mt-8 transition-all duration-300 ${HAPTIC_PRESS} disabled:opacity-70 disabled:cursor-not-allowed`}
             >
               {loading ? (
-                "Initializing Vault..."
+                <span className="animate-spin w-5 h-5 border-2 border-white/30 border-t-white rounded-full"></span>
               ) : (
                 <>
                   {" "}
