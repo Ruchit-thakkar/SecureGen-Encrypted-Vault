@@ -11,7 +11,7 @@ const connectTodb = require("./db/db");
 const userModel = require("./models/user.model"); // Ensure path is correct
 const authRoutes = require("./routes/auth.routes");
 const vaultRoutes = require("./routes/vault.routes");
-
+const path = require("path");
 connectTodb();
 
 app.use(cookieParser());
@@ -24,6 +24,8 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(express.static(path.join(__dirname, "../public")));
 
 // ==========================================
 // 🚀 PASSPORT GOOGLE STRATEGY SETUP
@@ -70,5 +72,7 @@ passport.use(
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/vault", vaultRoutes);
-
+app.get("*name", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/index.html"));
+});
 module.exports = app;
