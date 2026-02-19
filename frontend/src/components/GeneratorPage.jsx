@@ -170,7 +170,7 @@ export default function GeneratorPage({ setGlobalGeneratedPassword }) {
 
     try {
       const response = await axios.post(
-        "https://securegen-encrypted-vault.onrender.com/api/vault/add",
+        "https://securegen-encrypted-vault-1.onrender.com/api/vault/add",
         {
           title: saveData.title,
           password: password,

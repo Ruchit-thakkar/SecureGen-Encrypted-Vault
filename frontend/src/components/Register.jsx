@@ -72,7 +72,7 @@ export default function Register() {
 
         <div className="p-8 md:p-10 space-y-7">
           <a
-            href="https://securegen-encrypted-vault.onrender.com/api/auth/google"
+            href="https://securegen-encrypted-vault-1.onrender.com/api/auth/google"
             className={`w-full flex justify-center items-center gap-3 py-4 px-4 bg-white dark:bg-zinc-950 border-2 border-purple-50 dark:border-zinc-800/80 text-stone-700 dark:text-zinc-200 rounded-2xl font-black hover:border-purple-100 hover:shadow-lg hover:shadow-purple-500/5 dark:hover:border-zinc-700 transition-all duration-300 ${HAPTIC_PRESS}`}
           >
             <img
