@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { Mail, Lock, Phone, Zap, Hexagon, ShieldCheck } from "lucide-react";
+import { Mail, Lock, Phone, Zap, Hexagon } from "lucide-react";
 
 const HAPTIC_PRESS =
   "active:scale-[0.97] transition-transform duration-200 ease-out";
 
 export default function Register({ isDark }) {
-  // 👈 Make sure App.jsx passes isDark to Register!
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -18,7 +17,7 @@ export default function Register({ isDark }) {
   const { register } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [logoError, setLogoError] = useState(false); // For custom logo fallback
+  const [logoError, setLogoError] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,30 +50,18 @@ export default function Register({ isDark }) {
           <div className="absolute inset-0 bg-purple-500/20 dark:bg-emerald-500/20 blur-2xl rounded-full animate-pulse group-hover:bg-purple-500/40 transition-colors duration-500"></div>
 
           <div className="relative p-4 bg-white/80 backdrop-blur-xl dark:bg-zinc-900 border border-purple-100 dark:border-zinc-800 rounded-3xl shadow-xl shadow-purple-900/10 dark:shadow-black/50 transform rotate-6 group-hover:rotate-0 transition-transform duration-500">
-            {/* 🚀 Integrated Custom Logos Here */}
             {!logoError ? (
-              <>
-                {/* Dark Mode Logo */}
-                <img
-                  src="/logo1.png"
-                  alt="SecureGen Logo"
-                  onError={() => setLogoError(true)}
-                  className="hidden dark:block w-10 h-10 object-contain drop-shadow-md"
-                />
-                {/* Light Mode Logo */}
-                <img
-                  src="/logo2.png"
-                  alt="SecureGen Logo"
-                  onError={() => setLogoError(true)}
-                  className="block dark:hidden w-10 h-10 object-contain drop-shadow-md"
-                />
-              </>
+              <img
+                src={isDark ? "/logo1.png" : "/logo2.png"}
+                alt="SecureGen Logo"
+                onError={() => setLogoError(true)}
+                className="w-10 h-10 object-contain drop-shadow-md"
+              />
             ) : (
-              /* Fallback Icon */
               <Hexagon
                 size={40}
                 strokeWidth={2}
-                className="text-indigo-600 dark:text-teal-400 fill-indigo-50 dark:fill-teal-500/10"
+                className="text-purple-600 dark:text-emerald-400 fill-purple-50 dark:fill-emerald-500/10"
               />
             )}
           </div>
@@ -116,7 +103,6 @@ export default function Register({ isDark }) {
                   First Name
                 </label>
               </div>
-
               {/* Last Name Input */}
               <div className="relative group">
                 <input

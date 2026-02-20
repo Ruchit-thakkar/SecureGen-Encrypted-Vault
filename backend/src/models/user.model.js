@@ -12,29 +12,24 @@ const userSchema = new mongoose.Schema(
         required: true,
       },
     },
-
     email: {
       type: String,
       required: true,
       unique: true,
       lowercase: true,
     },
-
     password: {
       type: String,
       required: true,
     },
-
     phone: {
       type: String,
     },
-
     role: {
       type: String,
-      enum: ["user"], // future me doctor/admin add kar sakte ho
+      enum: ["user"],
       default: "user",
     },
-
     profileCompleted: {
       type: Boolean,
       default: false,

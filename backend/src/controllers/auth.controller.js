@@ -2,13 +2,13 @@ const bcrypt = require("bcrypt");
 const userModel = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+
 async function registerController(req, res) {
   try {
     if (!req.body) {
-      return res.status(400).json({
-        success: false,
-        message: "Request body is missing",
-      });
+      return res
+        .status(400)
+        .json({ success: false, message: "Request body is missing" });
     }
 
     const { fullName, email, password, phone } = req.body;
@@ -26,22 +26,24 @@ async function registerController(req, res) {
       });
     }
 
-    const isEmailExist = await userModel.findOne({ email });
+    // 🛡️ SECURITY FIX: Force email to lowercase and trim spaces to prevent typos
+    const normalizedEmail = email.toLowerCase().trim();
 
+    const isEmailExist = await userModel.findOne({ email: normalizedEmail });
     if (isEmailExist) {
-      return res.status(409).json({
-        success: false,
-        message: "Email already registered",
-      });
+      return res
+        .status(409)
+        .json({ success: false, message: "Email already registered" });
     }
 
+    // Hash the password ONCE here in the controller
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await userModel.create({
       fullName,
-      email,
+      email: normalizedEmail,
       password: hashedPassword,
-      phone,
+      phone: phone ? phone.trim() : "",
     });
 
     return res.status(201).json({
@@ -54,10 +56,7 @@ async function registerController(req, res) {
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 }
 
@@ -65,7 +64,6 @@ async function loginController(req, res) {
   try {
     const { email, phone, password } = req.body;
 
-    // validation
     if ((!email && !phone) || !password) {
       return res.status(400).json({
         success: false,
@@ -73,42 +71,39 @@ async function loginController(req, res) {
       });
     }
 
+    // 🛡️ SECURITY FIX: Force email to lowercase and trim spaces before searching
+    const normalizedEmail = email ? email.toLowerCase().trim() : undefined;
+
     // find user by email or phone
     const user = await userModel.findOne({
-      $or: [{ email }, { phone }],
+      $or: [{ email: normalizedEmail }, { phone }],
     });
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     // password check
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(401).json({
-        success: false,
-        message: "Invalid credentials",
-      });
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid credentials" });
     }
 
     // generate token
     const token = jwt.sign(
-      {
-        userId: user._id,
-        role: user.role,
-      },
+      { userId: user._id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "7d" },
     );
 
-    // In your backend loginController:
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false, // 👈 MUST BE FALSE for localhost
+      secure: process.env.NODE_ENV === "production", // Switches automatically!
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
@@ -126,47 +121,35 @@ async function loginController(req, res) {
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 }
+
 async function logoutController(req, res) {
   try {
     res.clearCookie("token", {
       httpOnly: true,
       sameSite: "lax",
-      secure: false, // true in production (https)
+      secure: process.env.NODE_ENV === "production",
     });
 
-    return res.status(200).json({
-      success: true,
-      message: "Logout successful",
-    });
+    return res
+      .status(200)
+      .json({ success: true, message: "Logout successful" });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 }
-// This uses your existing authMiddleware to check the cookie
+
 async function getMe(req, res) {
   try {
-    // If the middleware passes, req.user will be populated
-    return res.status(200).json({
-      success: true,
-      data: req.user,
-    });
+    return res.status(200).json({ success: true, data: req.user });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 }
+
 module.exports = {
   registerController,
   loginController,

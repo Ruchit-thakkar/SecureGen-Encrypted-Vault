@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { Mail, Lock, ArrowRight, Hexagon } from "lucide-react"; // Kept Hexagon for fallback
+import { Mail, Lock, ArrowRight, Hexagon } from "lucide-react";
 
 const HAPTIC_PRESS =
   "active:scale-[0.97] transition-transform duration-200 ease-out";
 
-export default function Login() {
+export default function Login({ isDark }) {
+  // 👈 FIXED: Added isDark prop
   const [formData, setFormData] = useState({ email: "", password: "" });
   const { login } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
-  // State to handle if custom logos fail to load
   const [logoError, setLogoError] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -36,26 +35,15 @@ export default function Login() {
         <div className="relative inline-flex justify-center mb-6 group">
           <div className="absolute inset-0 bg-indigo-500/20 dark:bg-teal-500/20 blur-2xl rounded-full animate-pulse group-hover:bg-indigo-500/40 transition-colors duration-500"></div>
           <div className="relative p-4 bg-white/80 backdrop-blur-xl dark:bg-zinc-900 border border-indigo-100 dark:border-zinc-800 rounded-3xl shadow-xl shadow-indigo-900/10 dark:shadow-black/50 transform -rotate-6 group-hover:rotate-0 transition-transform duration-500 flex items-center justify-center">
-            {/* 🚀 Custom Logos with Tailwind Theme Switching */}
+            {/* Custom Logos with Fallback */}
             {!logoError ? (
-              <>
-                {/* Dark Mode Logo */}
-                <img
-                  src="/logo1.png"
-                  alt="SecureGen Logo"
-                  onError={() => setLogoError(true)}
-                  className="hidden dark:block w-10 h-10 object-contain drop-shadow-md"
-                />
-                {/* Light Mode Logo */}
-                <img
-                  src="/logo2.png"
-                  alt="SecureGen Logo"
-                  onError={() => setLogoError(true)}
-                  className="block dark:hidden w-10 h-10 object-contain drop-shadow-md"
-                />
-              </>
+              <img
+                src={isDark ? "/logo1.png" : "/logo2.png"}
+                alt="SecureGen Logo"
+                onError={() => setLogoError(true)}
+                className="w-10 h-10 object-contain drop-shadow-md"
+              />
             ) : (
-              /* Fallback Icon */
               <Hexagon
                 size={40}
                 strokeWidth={2}
