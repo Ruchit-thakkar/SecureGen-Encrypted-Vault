@@ -472,9 +472,9 @@ This project is licensed under the ISC License - see the [LICENSE](LICENSE) file
 Created with ❤️ by [Your Name]
 
 ### Contact
-- 📧 Email: your.email@example.com
-- 💼 LinkedIn: https://linkedin.com/in/yourprofile
-- 🐙 GitHub: https://github.com/yourusername
+- 📧 Email: ruchitthakkar12@gmail.com
+- 💼 LinkedIn: https://www.linkedin.com/in/ruchit-thakkar-38ab37379
+- 🐙 GitHub: https://github.com/Ruchit-thakkar
 
 ---
 
